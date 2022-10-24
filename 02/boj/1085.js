@@ -1,0 +1,5 @@
+let fs = require('fs')
+let [x, y, w, h] = fs.readFileSync('/dev/stdin').toString().split(' ')
+// let [x, y, w, h] = fs.readFileSync('./input.txt').toString().split(' ')
+result = Math.min(x, w - x, y, h - y)
+console.log(result)

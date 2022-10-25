@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Document</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <ul class="switcher">
+    <li id="grayButton"></li>
+    <li id="whiteButton"></li>
+    <li id="navyButton"></li>
+  </ul>
+
+  <h1>Theme Switcher</h1>
+
+  <p>테마를 바꿔봅시다.</p>
+
+  <script>
+    const grayButton = document.querySelector('#grayButton')
+    const whiteButton = document.querySelector('#whiteButton')
+    const navyButton = document.querySelector('#navyButton')
+    const h1Tag = document.querySelector('h1')
+    const pTag = document.querySelector('p')
+    const body = document.querySelector('body')
+    grayButton.addEventListener('click', function (event) {
+      body.setAttribute('id', 'grayButton')
+      h1Tag.style.color = 'white'
+      pTag.style.color = 'white'
+    })
+    whiteButton.addEventListener('click', function (event) {
+      body.setAttribute('id', 'whiteButton')
+      h1Tag.style.color = 'black'
+      pTag.style.color = 'black'
+    })
+    navyButton.addEventListener('click', function (event) {
+      body.setAttribute('id', 'navyButton')
+      h1Tag.style.color = 'white'
+      pTag.style.color = 'white'
+    })
+
+  </script>
+</body>
+
+</html>

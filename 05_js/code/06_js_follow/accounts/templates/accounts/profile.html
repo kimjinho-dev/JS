@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ person.username }}님의 프로필</h1>
+  <div>
+    팔로워 : <span id="follwers-count"></span> / 
+    팔로잉 : <span id="follings-count"></span>
+  </div>
+
+  {% if request.user != person %}
+  <div>
+    <form id="followForm" data-user-id="{{ person.pk }}">
+      {% csrf_token %}
+      {% if request.user in person.followers.all %}
+        <input type="submit" value="언팔로우">
+      {% else %}
+        <input type="submit" value="팔로우">
+      {% endif %}
+    </form>
+  <div>
+  {% endif %}
+
+  <h2>{{ person.username }}이 작성한 모든 게시글</h2>
+  {% for article in person.article_set.all %}
+    <div>{{ article.title }}</div>
+  {% endfor %}
+
+  <hr>
+
+  <h2>{{ person.username }}이 작성한 모든 댓글</h2>
+  {% for comment in person.comment_set.all %}
+    <div>{{ comment.content }}</div>
+  {% endfor %}
+
+  <hr>
+
+  <h2>{{ person.username }}이 좋아요 한 모든 게시글</h2>
+  {% for article in person.like_articles.all %}
+    <div>{{ article.title }}</div>
+  {% endfor %}
+
+  <a href="{% url 'articles:index' %}">back</a>
+{% endblock content %}
+
+{% block script %}
+
+    <script>
+      const form = document.querySelector('#followForm')
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value
+      const followerCounter = 
+      form.addEventListener('submit', function (event) {
+        event.preventDefault()
+        const userId = event.target.dataset.userId
+
+          axios({
+            method: 'post',
+            url: `/accounts/${userId}/follow/`,
+            headers: {'X-CSRFToken': csrftoken}, 
+          })
+            .then((response) => {
+              // 언팔로우, 팔로우 버튼 변경
+              const isFollowed = response.data.is_followed
+              const folloButton = document.querySelector('#followForm > input[type=submit]')
+              if (isFollowed){
+                folloButton.value = '언팔로우'
+              } else {
+                folloButton.value = '팔로우'
+              }
+
+              // 팔로워, 팔로잉 카운터 변경
+              const followerCountTag = document.querySelector('#follwers-count')
+              const follingsCountTag = document.querySelector('#follings-count')
+              followerCountTag.innerText = response.data.follower_count
+              follingsCountTag.innerText = response.data.following_count
+              
+            })
+      })
+      
+    </script>
+    
+{% endblock  %}
